@@ -1,0 +1,45 @@
+name: Sune Keller's blog
+
+description: Posts from Sune Keller
+
+links:
+  dribbble:
+  email:
+  facebook:
+  flickr:
+  github: sirlatrom
+  instagram:
+  linkedin:
+  pinterest:
+  rss: # just type anything here for a working RSS icon, make sure you set the "url" above!
+  twitter: sirlatrom
+  stackoverflow: users/801334/sirlatrom
+  youtube: # channel/<your_long_string> or user/<user-name>
+  googleplus: +SuneKeller
+
+
+disqus: sunekellerblog
+
+google_analytics: 
+
+url: http://blog.sunekeller.dk
+
+baseurl: ""
+
+permalink: /:year/:month/:title/
+excerpt_separator: <!--more-->
+
+version: v1.1.0
+
+sass:
+  style: :compressed # You might prefer to minify using :compressed
+plugins:
+  - jekyll-feed
+exclude:
+    - Gemfile
+    - Gemfile.lock
+    - LICENSE
+    - README.md
+    - CNAME
+feed:
+  path: atom.xml

@@ -1,0 +1,103 @@
+---
+---
+
+
+@import "bootstrap";
+@import "sparkling";
+@import "sparkling-overrides";
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: Raleway, sans-serif;
+  font-weight: normal;
+}
+
+body {
+  font-family: Lato, sans-serif;
+}
+
+strong {
+  color: #222;
+}
+
+pre.no-wrap code {
+  word-wrap: normal;
+  white-space: pre;
+}
+
+pre {
+  position: relative;
+  margin-left: -50px;
+  margin-right: -50px;
+  border: 0px;
+  background-color: #282b2e;
+  padding: 15px 20px;
+  border-radius: 0px;
+}
+
+pre[class*=language-] {
+  padding-top: 45px;
+}
+
+@media (max-width: 768px) {
+  pre {
+    margin-left: -25px;
+    margin-right: -25px;
+  }
+}
+
+pre[class*=language-]:before {
+    content: attr(data-title);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 5px 15px;
+    text-align: right;
+    font-family: arial;
+    text-shadow: none;
+    font-size: 17px;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: #114663;
+    color: #fff;
+}
+
+.blog-list-entry {
+  padding: 10px 0px;
+  border-bottom: 1px solid #ccc;
+
+  a {
+    color: #07a9d9;
+    display: block;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &:last-child {
+    border-bottom: 0px;
+  }
+}
+
+.entry-meta {
+  margin-bottom: 0;
+}
+
+h1.entry-title {
+  margin-bottom: 10px;
+}
+
+.entry-content {
+  margin-top: 0;
+}
+
+.navbar>.container .navbar-brand {
+  font-family: "Lato", sans-serif;
+}
+
+.post-card-header {
+  padding: 5px 15px;
+  background: white;
+  border: 1px solid #ddd;
+}

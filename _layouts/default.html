@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }}</title>
+
+    {% include meta.html %}
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!--<link rel="stylesheet" href="{{ site.baseurl }}/highlight/styles/default.css" />-->
+    <link rel="stylesheet" href="{{ site.baseurl }}/highlight/styles/obsidian.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Raleway" rel="stylesheet"/>
+
+    <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="{{ site.name }} - {{ site.description }}" href="{{ site.baseurl }}/feed.xml" />
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <div class="row">
+          <div class="site-navigation-inner col-sm-12">
+            <div class="navbar-header">
+              <button type="button" class="btn navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <div id="logo">
+                <span class="site-name"><a class="navbar-brand" href="/" title="Sune Keller's blog" rel="home">{{ site.name }}</a></span>
+              </div><!-- end of #logo -->
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="container main-content-area">
+      <div class="row">
+        <div class="main-content-inner col-sm-12 col-lg-10 col-lg-offset-1">
+          <div id="primary" class="content-area">
+            <main id="main" class="site-main" role="main">
+              {{ content }}
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    {% include analytics.html %}
+    <script src="{{ site.baseurl }}/highlight/highlight.pack.js"></script>
+    <script>hljs.configure({useBR:false});hljs.initHighlightingOnLoad();</script>
+    <script id="dsq-count-scr" src="//sunekellerblog.disqus.com/count.js" async></script> 
+  </body>
+</html>
