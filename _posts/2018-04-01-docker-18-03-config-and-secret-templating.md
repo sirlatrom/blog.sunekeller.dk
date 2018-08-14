@@ -46,7 +46,7 @@ Adding documentation is tracked in [this GitHub issue](https://github.com/docker
 Here's a step-by-step example to illustrate the feature:
 
 1. Create a Swarm secret with the intended password for Redis:
-    ```bash
+    ```console
     openssl rand -hex 32 | tr -d '\n' | docker secret create redis_pw -
     ```
 2. Create a `redis.conf` file e.g. using the [default Redis config](http://download.redis.io/redis-stable/redis.conf),
@@ -59,11 +59,11 @@ Here's a step-by-step example to illustrate the feature:
     requirepass {{ secret "redis_pw" }}
     ```{% endraw %}
 5. Create a Swarm config for `redis.conf` using the new `--template-driver` option, and inspect its contents to show that the `redis_pw` secret is not revealed:
-    ```bash
+    ```console
     docker config create --template-driver golang redis.conf ./redis.conf
     ```
 6. Inspect its contents to show that the `redis_pw` secret is not revealed:
-    ```bash
+    ```console
     docker config inspect --pretty redis.conf | grep '^requirepass'
     ```
    yielding
@@ -71,7 +71,7 @@ Here's a step-by-step example to illustrate the feature:
     requirepass {{ secret "redis_pw" }}
     ```{% endraw %}
 7. Create an attachable overlay network and a Swarm service using the official Redis image:
-    ```bash
+    ```console
     docker network create --driver overlay --attachable redis_network
     docker service create \
       --name redis \
@@ -82,15 +82,15 @@ Here's a step-by-step example to illustrate the feature:
       redis-server /usr/local/etc/redis/redis.conf
     ```
 8. Try running a Redis CLI against the Redis service:
-    ```bash
+    ```console
     docker run --rm --network redis_network redis:alpine redis-cli -h redis -p 2100 set x "I'm in"
     ```
    resulting in
-    ```bash
+    ```console
     NOAUTH Authentication required.
     ```
 9. Try running a CLI in a service with access to the secret:
-    ```bash
+    ```console
     docker service create \
       --detach \
       --name redis-cli-test \
@@ -99,9 +99,10 @@ Here's a step-by-step example to illustrate the feature:
       --restart-condition on-failure \
       redis:alpine \
       sh -c 'redis-cli -h redis -p 2100 -a "$(cat /run/secrets/redis_pw)" set x "I'"'"'m in"; redis-cli -h redis -p 2100 -a "$(cat /run/secrets/redis_pw)" get x'
+    ```
 10. Wait a couple of seconds - currently we have to specify `--detach` with `--restart-condition on-failure` since the synchronous `docker service create` command (without `--detach`) interprets a task in state `Completed` to be a failure, and will not return you to the command line.[^2]
 11. Inspect the logs to see it working:
-    ```bash
+    ```console
     docker service logs --raw redis-cli-test
     ```        
     and you should get the following output:

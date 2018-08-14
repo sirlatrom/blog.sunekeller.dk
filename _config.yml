@@ -17,6 +17,7 @@ links:
   youtube: # channel/<your_long_string> or user/<user-name>
   googleplus: +SuneKeller
 
+theme: jekyll-theme-slate
 
 disqus: sunekellerblog
 
@@ -41,5 +42,11 @@ exclude:
     - LICENSE
     - README.md
     - CNAME
+    - vendor/bundle/
+    - vendor/cache/
+    - vendor/gems/
+    - vendor/ruby/
+    - docker-compose.yml
+    - Dockerfile
 feed:
   path: atom.xml
