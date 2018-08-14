@@ -3,9 +3,13 @@ version: '2'
 services:
   app:
     image: jekyll/jekyll
-    command: jekyll serve --future --drafts
+    command: sh -c 'update-ca-certificates && jekyll serve --future --drafts'
     volumes:
       - ./:/srv/jekyll
       - ./vendor/bundle:/usr/local/bundle
+      - ./httpproxy.crt:/usr/local/share/ca-certificates/httpproxy.crt
     ports:
       - 4000:4000
+    environment:
+      http_proxy:
+      https_proxy:

@@ -2,6 +2,8 @@ name: Sune Keller's blog
 
 description: Posts from Sune Keller
 
+version: v1.1.0
+
 links:
   dribbble:
   email:
@@ -17,7 +19,7 @@ links:
   youtube: # channel/<your_long_string> or user/<user-name>
   googleplus: +SuneKeller
 
-theme: jekyll-theme-slate
+theme: jekyll-theme-minimal
 
 disqus: sunekellerblog
 
@@ -29,8 +31,6 @@ baseurl: ""
 
 permalink: /:year/:month/:title/
 excerpt_separator: <!--more-->
-
-version: v1.1.0
 
 sass:
   style: :compressed # You might prefer to minify using :compressed
