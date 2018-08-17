@@ -6,3 +6,10 @@
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
+
+.lower_roman_list {
+    list-style-type: lower-roman;
+}
+.lower_alpha_list {
+    list-style-type: lower-alpha;
+}
