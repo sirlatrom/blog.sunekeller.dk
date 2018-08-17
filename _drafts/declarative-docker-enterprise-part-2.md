@@ -1,6 +1,6 @@
 ---
-title: Declarative Docker EE with Packer, Terraform, Ansible and GitLab - part 2
-tags: [docker,docker ee,packer,terraform,ansible,gitlab,series,enterprise]
+title: Declarative Docker Enterprise with Packer, Terraform, Ansible and GitLab - part 2
+tags: [docker,docker enterprise,packer,terraform,ansible,gitlab,series,enterprise]
 description: Part 2
 excerpt: Part 2
 image: 
@@ -35,9 +35,6 @@ Once any new nodes have been joined to the cluster, the rolling upgrade can be p
 
 \*\* If the node being upgraded is one of the DTR replicas, when it is to be destroyed, it is first removed from the DTR cluster such that the other replicas will know about the (temporary) new number of replicas. When its replacement has been joined to the cluster as a worker node, it is additionally joined to the DTR cluster to become one of the available replicas.
 
-
-
-
 ## A quick note on tools and our environment
 
 The setup I describe in this series runs on our on-premises 2 location stretched VMware datacenter. For building VM templates, we use [HashiCorp Packer](https://www.packer.io/) and a customized Ubuntu 16.04 netboot installer ISO. For creating or replacing VMs we use [HashiCorp Terraform](https://www.terraform.io/). To orchestrate the different stages of the pipeline, we use [GitLab](https://www.gitlab.com). We run [Ansible](https://www.ansible.com) playbooks from within Terraform. We use [govc](https://github.com/vmware/govmomi/blob/master/govc/README.md) for several VM related tasks.
@@ -47,7 +44,7 @@ The setup I describe in this series runs on our on-premises 2 location stretched
 The overall flow for a new cluster consists of a few high-level steps:
 
 1. Create a base VM template from a custumized Ubuntu installation ISO file
-2. Create a Docker + UCP VM template on top of the template made in step 1 with all the necessary packages to install and run Docker EE
+2. Create a Docker + UCP VM template on top of the template made in step 1 with all the necessary packages to install and run Docker Enterprise
 3. Create a configured list of VMs for a given cluster environment
 4. Configure the created VMs by installing and joining together a Docker UCP cluster, optionally with a DTR cluster and predefined UCP teams and grants
 
@@ -69,7 +66,7 @@ Once built, the VM template will exist under a specific folder in VMware vCenter
 
 This is the second part of our pipeline and resides in its own repo in GitLab.
 
-The Docker + UCP VM template is built on top of the base VM template. The concern of this part is to install and configure the necessary packages for an instance to be part of the cluster. It uses HashiCorp Packer to clone the base VM template and run Ansible locally on the VM in order to install required packages, apt repos for Docker EE, and configure HTTP proxy and CA certificate trust, among other things.
+The Docker + UCP VM template is built on top of the base VM template. The concern of this part is to install and configure the necessary packages for an instance to be part of the cluster. It uses HashiCorp Packer to clone the base VM template and run Ansible locally on the VM in order to install required packages, apt repos for Docker Enterprise, and configure HTTP proxy and CA certificate trust, among other things.
 
 The list of packages that an operator can expect to find on every instance is listed in a playbook in this repo, and rather than installing additional tools or packages on all the individual nodes after they have been created, it is recommended to add them to this repo and perform a rolling upgrade of the cluster.
 
@@ -92,4 +89,3 @@ The actions that Terraform will take when the Terraform configuration is applied
 After checking the plan, it should be applied to join any new nodes before upgrading. Any new nodes added to the Terraform configuration for a cluster will be created and joined to the cluster.
 
 #### Upgrading the nodes one at a time
-

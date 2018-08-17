@@ -1,6 +1,7 @@
 ---
-title: Declarative Docker EE with Packer, Terraform, Ansible and GitLab - part 1
-tags: [docker,docker ee,packer,terraform,ansible,gitlab,series,enterprise]
+redirect_from: /2018/08/declarative-docker-ee-part-1/
+title: Declarative Docker Enterprise with Packer, Terraform, Ansible and GitLab - part 1
+tags: [docker,docker enterprise,packer,terraform,ansible,gitlab,series,enterprise]
 description: At [Alm. Brand](https://www.almbrand.dk), we've been running Docker in production since the first beta of Docker Universal Control Plane (UCP). This is the story about how we moved on to a more automated and declarative approach.
 excerpt: At [Alm. Brand](https://www.almbrand.dk), we've been running Docker in production since the first beta of Docker Universal Control Plane (UCP). This is the story about how we moved on to a more automated and declarative approach.
 image:
