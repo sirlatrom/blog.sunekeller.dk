@@ -7,9 +7,17 @@ image:
 uuid: 43e9242c-a205-11e8-a622-6c3be53e3c96
 ---
 
-# Background
+This is the second part in a series about building and upgrading Docker EE clusters while striving for a declarative approach. See [part 1]({% post_url 2018-08-17-declarative-docker-enterprise-part-1 %}) for more background.
 
-See [part 1]().
+# Creation
+
+The first time a cluster is to be created, things are a little different. There are no existing VMs, and thus no services running on them. This makes things simpler in terms of how we apply the planned changes using Terraform.
+
+In broad terms, the nodes that will make up the cluster are divided into three groups, which is reflected in our Terraform config:
+
+1. UCP Controllers (named `managers`)
+2. UCP Workers (named `workers`)
+3. DTR replicas (named `dtrs`)
 
 # The upgrade process
 
