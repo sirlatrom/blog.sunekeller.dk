@@ -26,7 +26,7 @@ However, we were determined to make better use of our learnings from building an
 
 # Our solution
 
-![My helpful screenshot](/assets/images/2018-08-16-ucp-provisioner-pipeline-1.png)
+![A screenshot of our provisioning pipeline](/assets/images/2018-08-16-ucp-provisioner-pipeline-1.png)
 
 Some of our learnings from the first two years of running a Docker cluster were:
 
