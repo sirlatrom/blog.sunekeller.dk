@@ -39,7 +39,7 @@ Here's a list of variables that we define for *every* VM (using a map from VM na
 
 That's a **lot**! Additionally, we have to ask the network team to create DHCP reservations and VIP addresses, ask our storage vendor to add the storage IP addresses to the whitelist for the given storage policy, and request TLS certificates for UCP and DTR from our internal PKI.
 
-But once all that is defined, we're good to go and can run our pipeline in GitLab[^gitlab-variables-note].
+But once all that is defined, we're good to go and can run our pipeline in GitLab.[^gitlab-variables-note]
 
 ## GitLab pipeline
 
