@@ -211,6 +211,7 @@ plugins:
   - jekyll-feed
   - jemoji
   - jekyll-redirect-from
+  - jekyll-archives
 
 # mimic GitHub Pages with --safe
 whitelist:
@@ -220,6 +221,7 @@ whitelist:
   - jekyll-feed
   - jemoji
   - jekyll-redirect-from
+  - jekyll-archives
 
 
 # Archives
@@ -234,15 +236,15 @@ whitelist:
 #  - <base_path/my-awesome-category/index.html ~> path: /
 category_archive:
   type: liquid
-  path: /categories/
+  path: /category-archive/
 tag_archive:
   type: liquid
-  path: /tags/
+  path: /tags-archive/
 # https://github.com/jekyll/jekyll-archives
-# jekyll-archives:
-#   enabled:
-#     - categories
-#     - tags
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
 #   layouts:
 #     category: archive-taxonomy
 #     tag: archive-taxonomy
@@ -272,3 +274,4 @@ defaults:
       comments: true
       share: true
       related: true
+      sitemap: true
