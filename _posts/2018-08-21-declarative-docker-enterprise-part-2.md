@@ -1,8 +1,8 @@
 ---
 title: Declarative Docker Enterprise with Packer, Terraform, Ansible and GitLab - part 2
 tags: [docker,docker enterprise,packer,terraform,ansible,gitlab,series,enterprise]
-description: Part 2
-excerpt: Part 2
+description: This part describes how we use Terraform, Ansible and GitLab for creating and upgrading clusters in an automated fashion.
+excerpt: This part describes how we use Terraform, Ansible and GitLab for creating and upgrading clusters in an automated fashion.
 image: 
 uuid: 43e9242c-a205-11e8-a622-6c3be53e3c96
 ---
@@ -31,13 +31,13 @@ Here's a list of variables that we define for *every* VM (using a map from VM na
 * Number of vCPUs
 * Memory size in MB
 * Disk size [^linked-clone-requirements]
-* Datacenter name (`dc1` or `dc2`)
+* Datacenter name (e.g. `dc1` or `dc2`)
 * Primary network name [^indirect-tf-config]
 * Storage network name [^indirect-tf-config] [^netapp-dvp-note]
 * Storage IP address [^netapp-dvp-note]
 * Storage policy name [^netapp-dvp-note]
 
-That's a **lot**! Additionally, we have to ask the network team to create DHCP reservations and VIP addresses, ask our storage vendor to add the storage IP addresses to the whitelist for the given storage policy, and request TLS certificates for UCP and DTR from our internal PKI.
+That's a **lot**! Additionally, we have to ask the network team to create DHCP reservations and VIP addresses, ask our storage vendor to add the storage IP addresses to the whitelist for the given storage policy, and request TLS certificates for UCP and DTR from our internal PKI. Those are all tasks ripe for automation, but we haven't got there yet.
 
 But once all that is defined, we're good to go and can run our pipeline in GitLab.[^gitlab-variables-note]
 
@@ -109,7 +109,7 @@ Using the UCP HTTP API, we create the teams, checking for each one that it does 
         1. We get the join token for Swarm workers from the first manager node by running `docker swarm join-token worker`
         1. The current Swarm cluster status of each non-manager node is collected
         1. If the node is not already in the cluster, we join it by running `docker swarm join --token <token> <first-node-addr>:2377`
-        1. We add a Swarm node label to every node based on its value from the Terraform config's deployment stage variable (this is later used for constraining Swarm services to specific stages when the user has access to multiple stages)
+        1. We add a Swarm node label to every node based on its value from the Terraform config's deployment stage variable (this is later used for constraining Swarm services to specific stages when the user has access to multiple stages), and one that signifies what datacenter the node is in
         1. We also add a Swarm node label to assign each node to a UCP collection by setting the `com.docker.ucp.access.label` label, e.g. to `prod`, which will restrict which UCP users will be able to see and interact with/schedule services on the node
         1. We wait for the `ucp-reconcile` container on the first manager node to exit successfully (see the [UCP architecture](https://docs.docker.com/ee/ucp/ucp-architecture/#under-the-hood) page), indicating that the UCP worker components are up and running
         1. When all worker and DTR nodes are correctly configured as plain workers, we need to install DTR:
@@ -150,6 +150,8 @@ templates = {
 }
 ```
 
+You'll notice the template for `ucp1` having changed from `Ubuntu1604DockerTemplate-20180604-154739-master-50798-push` to `Ubuntu1604DockerTemplate-20180820-022846-master-63776-pipeline`. A useful tool called [json2hcl](https://github.com/kvz/json2hcl) ([Docker image](https://hub.docker.com/r/fxinnovation/json2hcl/)) helps us convert between Hashicorp's HCL configuration format and JSON, allowing us to manipulate the config with [jq](https://stedolan.github.io/jq/).
+
 We then run `terraform plan` followed by `terraform apply`, and Terraform should then show the `ucp1` VM as [*tainted*](https://www.terraform.io/docs/commands/taint.html) since its template VM name has changed, forcing the VM to be destroyed and a new one created in its place. Thankfully, Terraform allows us to hook into the destroy process, running scripts *before* the VM is destroyed. Furthermore, we can abort the destruction of the VM if our script errors out, allowing us to stop the process and carry out manual intervention when facing specific failure conditions. Terraform remembers its progress and will re-attempt to replace the VM next time we run the pipeline.
 
 Here's the general process for upgrades:
@@ -169,6 +171,11 @@ Here's the general process for upgrades:
                 1. Joining the new VM to the Swarm cluster, wait for it to be marked as healthy
                 1. Putting the VM in the right UCP collection (using node labels) so tasks can be scheduled on it
                 1. Performing additional tasks for UCP* or DTR** nodes
+                1. When the *last* VM has been successfully upgraded to the same Docker Engine version, UCP and DTR are upgraded if the desired version is newer than what's currently installed:
+                    1. We take a backup of UCP using the `docker run ... docker/ucp backup` command, and copy the resulting archive to the GitLab runner for archival.
+                    1. UCP is upgraded by running `docker run ... docker/ucp upgrade` command, and the command runs synchronously until the upgrade completes.
+                    1. We take a backup of DTR's metadata (not its image data, which resides on an NFS share), which takes a considerable time, and copy the resulting archive to the GitLab runner for archival. Note that we have to run the output of the backup command through `gzip` for the resulting file size to be small enough that Ansible's expensive `fetch` action doesn't [consume all available memory](https://docs.ansible.com/ansible/latest/modules/fetch_module.html#notes) on our GitLab runner VM.
+                    1. The process is similar for DTR, `docker run ... docker/dtr upgrade`, which upgrades each component one at a time on each DTR replica.
         {:.lower_roman_list}
     {:.lower_alpha_list}
 
