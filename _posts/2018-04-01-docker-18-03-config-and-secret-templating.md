@@ -1,4 +1,5 @@
 ---
+redirect_from: /docker-18-03-config-and-secret-templating/
 title: Using the new config and secret templating in Docker CE 18.03
 tags: [docker,swarm,configs,secrets,intermediate,features,what's new,docker ce]
 description: Since Docker CE 18.03, you can have the best of both worlds. Using the new --template-driver option to docker config create and docker secret create, you can insert secret references as well as other templating placeholders directly in your Swarm configs, evaluated at task creation time.
