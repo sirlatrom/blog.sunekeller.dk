@@ -9,6 +9,9 @@ uuid: 43e9242c-a205-11e8-a622-6c3be53e3c96
 
 This is the second part in a series about building and upgrading Docker EE clusters while striving for a declarative approach. See [part 1]({% post_url 2018-08-17-declarative-docker-enterprise-part-1 %}#background) for more background.
 
+**Post updated Aug 22 2018:** Added [conclusion](#conclusion) section.
+{: .notice--info}
+
 # Creation
 
 The first time a cluster is to be created, things are a little different. There are no existing VMs, and thus no services running on them. This makes things simpler in terms of how we apply the planned changes using Terraform.
@@ -182,6 +185,14 @@ Here's the general process for upgrades:
 \* If the node being upgraded is one of the UCP controllers, when it is to be destroyed, it is demoted such that the other controllers will be made to know about the (temporary) new number of controllers.
 
 \*\* If the node being upgraded is one of the DTR replicas, when it is to be destroyed, it is first removed from the DTR cluster such that the other replicas will know about the (temporary) new number of replicas. When its replacement has been joined to the cluster as a worker node, it is additionally joined to the DTR cluster to become one of the available replicas.
+
+# Conclusion
+
+Using this method, we can use the same approach whether we upgrade Docker Engine, add new Ubuntu packages or apply a security patch, by simply doing that once in our VM template and rolling the upgrade out across our cluster. There's no ambiguity about whether a node is updated or not; it is either based on the latest VM template, or it isn't. If it is, it's up to date.
+
+Once we've gone through a few more supervised rolling upgrades, we want it to be a regular scheduled job ([GitLab](https://docs.gitlab.com/ce/user/project/pipelines/schedules.html) can help with visibility there compared with an oldfashioned `cron` job), e.g. running weekly.
+
+In an upcoming post, I will provide a deep dive into the configuration of the various tools involved, namely Packer, Terraform, Ansible and GitLab, and any quirks that may be useful to other organizations.
 
 [^host-drs]: The direct host assignment will be replaced with [DRS group membership](https://www.terraform.io/docs/providers/vsphere/r/compute_cluster_vm_host_rule.html#example-usage), the management of which was introduced in the [Terraform vSphere Provider v1.5.0](https://github.com/terraform-providers/terraform-provider-vsphere/blob/master/CHANGELOG.md#150-may-11-2018).
 [^linked-clone-requirements]: Since the disk size must be identical to that of the VM template when using [linked clones](https://www.terraform.io/docs/providers/vsphere/r/virtual_machine.html#linked_clone), this is practically always the same for all VMs.
