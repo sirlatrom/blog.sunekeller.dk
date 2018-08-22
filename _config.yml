@@ -101,7 +101,7 @@ analytics:
 # Site Author
 author:
   name             : "Sune Keller"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : /assets/images/bio-photo.jpg # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "A Docker Captain's blog"
   location         : "Copenhagen, Denmark"
   email            :
