@@ -1,5 +1,5 @@
 ---
-title: 'Deep Dive: Using Packer and Ansible to create a golden VMware image for Docker Enterprise'
+title: 'Deep Dive: Using Packer and Ansible to create a golden VMware image for Docker Enterprise - part 1'
 tags: [docker,docker enterprise,packer,vmware,vsphere,ansible,gitlab,series,enterprise,deep dive]
 description: In this post, I go into detail about how we build the VM template that is the basis of our Docker cluster.
 excerpt: In this post, I go into detail about how we build the VM template that is the basis of our Docker cluster.
@@ -412,3 +412,5 @@ You then build and push that image to your registry (Docker Hub, DTR or whicheve
 # Conclusion
 
 Building a golden image VM template with Packer and vSphere is perfectly doable, the tools are all there, readily available and well documented.
+
+The next part of this deep dive will deal with actually installing Docker Enterprise in a subsequent VM template.
