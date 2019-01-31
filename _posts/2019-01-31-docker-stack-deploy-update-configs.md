@@ -3,8 +3,6 @@ title: 'Docker stack deploy: update configs and secrets'
 tags: [docker,stack,deploy,swarm,configs,secrets,ci,cd]
 description: In this post, I explain how you can use CI variables or file digests to update configs and secrets during docker stack deploy.
 excerpt: In this post, I explain how you can use CI variables or file digests to update configs and secrets during docker stack deploy.
-header:
-  image: /assets/images/2018-08-22-golden-image-base-pipeline-1.png
 uuid: 28f1e06e-2590-11e9-a2a7-33a1ce4af04f
 ---
 
