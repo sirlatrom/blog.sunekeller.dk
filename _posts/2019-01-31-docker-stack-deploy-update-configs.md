@@ -71,6 +71,8 @@ secrets:
     file: cert.pem
 ```
 
+The downside of using the job number is that you'll update the configs and secrets _and_ their dependent services _every_ time you run the job, which is not what you'd expect if you only edited one of the files.
+
 As for method 2, to use digests, you could decide on a certain convention for the variable names like this:
 
 ```yaml
