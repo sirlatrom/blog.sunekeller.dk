@@ -114,8 +114,9 @@ The plugin works like this:
     1. Use that token to read a [generic key/value secret](https://www.vaultproject.io/api/secret/kv/kv-v2.html) from a specified path, and _optionally_:
         1. Return a specific field inside that path
         2. JSON-encode the returned value
+        {:.lower_roman_list}
     2. Optionally use response wrapping to deliver the returned value
-
+    {:.lower_alpha_list}
 The source code for the proof of concept plugin is available on [GitLab](https://gitlab.com/sirlatrom/docker-secretprovider-plugin-vault/).
 
 ### A complication
@@ -135,11 +136,63 @@ Until Docker 19.03, you cannot use response wrapping with the plugin. It goes wi
 
 Also, the plugin currently relies on getting its _own_ access to Vault (a more privileged token that can perform the plugin's functions) through suboptimal means. Because plugins in Docker, even if run as containers, are currently very different from regular containers, there are several features you cannot make use of. Namely, even though you can have a special type of Swarm service to install the plugin in your Swarm, there is currently no way for you to attach Swarm secrets to such a service, static or otherwise. This leaves you with the problem of safely bootstrapping the plugin itself. The only method I could think of, which really is half-baked, but works in this POC, is to give the plugin access to the Docker socket of the manager node it is installed on, and use a helper service to hold the bootstrapping token. The plugin then uses the Docker API to find the helper service's container and reads the bootstrapping token from there.
 
+### Usage
+
+See the [README](https://gitlab.com/sirlatrom/docker-secretprovider-plugin-vault/blob/master/README.md) in the repo for instructions; here is what it says:
+
+Run ./rebuild.sh, you should get the following - note the different tokens in the two task instances of the snitch service:
+
+```console
+$ ./rebuild.sh
+...
+Success! Uploaded policy: snitch
+Key              Value
+---              -----
+created_time     2018-08-30T02:21:27.980476389Z
+deletion_time    n/a
+destroyed        false
+version          1
+Key              Value
+---              -----
+created_time     2018-08-30T02:21:28.088984314Z
+deletion_time    n/a
+destroyed        false
+version          1
+fiqw1xaqjqofvinflvmnzo83t
+zj2hvlev230x0s1ei9t25ft9m
+overall progress: 1 out of 1 tasks
+ij2r01ffy6ak: running   [==================================================>]
+verify: Service converged
+sirlatrom/docker-secretprovider-plugin-vault
+5ioiauam5n9nms9neb6szbwxj
+n5j855gu0i460bno1aaw3neq9
+t99bbs7y5c1y61tyxxhd3msoj
+i9sbmcaqc46v5a44u00fkfxfv
+snitch.2.y42sqzj8524y@redacted_host    | secret:              this_was_not_wrapped
+snitch.2.y42sqzj8524y@redacted_host    | wrapped_secret:      1afd51f9-c1a2-d4ec-8ceb-8e043b77b53a
+snitch.1.gpy8rj3oxz0n@redacted_host    | secret:              this_was_not_wrapped
+snitch.1.gpy8rj3oxz0n@redacted_host    | wrapped_secret:      6567b96c-338e-cd3b-e9bc-67c65597fd0f
+snitch.2.y42sqzj8524y@redacted_host    | unwrapped_secret:    this_was_once_wrapped
+snitch.2.y42sqzj8524y@redacted_host    | generic_vault_token: ddef57f5-a235-923c-4e7c-0a519d307f10
+snitch.1.gpy8rj3oxz0n@redacted_host    | unwrapped_secret:    this_was_once_wrapped
+snitch.1.gpy8rj3oxz0n@redacted_host    | generic_vault_token: b7b27691-1776-ae52-ffc3-b6a59152d12f
+snitch.2.lepelzpcjscj@redacted_host    | secret:              this_was_not_wrapped
+snitch.2.lepelzpcjscj@redacted_host    | wrapped_secret:      84df01da-11f9-acba-0373-89bd1f161798
+snitch.2.lepelzpcjscj@redacted_host    | unwrapped_secret:    this_was_once_wrapped
+snitch.2.lepelzpcjscj@redacted_host    | generic_vault_token: 9214b53f-027c-6552-a0a9-1b18783550d1
+snitch.1.edwdvkmvpbke@redacted_host    | secret:              this_was_not_wrapped
+snitch.1.edwdvkmvpbke@redacted_host    | wrapped_secret:      df1714e1-a1b6-07eb-10c1-7e1ba4e73022
+snitch.1.edwdvkmvpbke@redacted_host    | unwrapped_secret:    this_was_once_wrapped
+snitch.1.edwdvkmvpbke@redacted_host    | generic_vault_token: bedf29d5-fbdd-6085-7809-f113078c66b1
+...
+```
+
 # Future work
 
 Configs can be created with the `--template-driver` option, allowing you to insert placeholders for secrets (as described [here]({% post_url 2018-04-01-docker-18-03-config-and-secret-templating %})) in your config file and have those be resolved each time a task (container) for a service is created. There will be a `template_driver` equivalent in the Docker Compose file format eventually (here are the pull requests: [docker/cli#1746](https://github.com/docker/cli/pull/1746)+[docker/compose#6530](https://github.com/docker/compose/issues/6530)). Once that is in place (tentatively set for Compose file format version 3.8), you'll be able to combine configs _and_ secrets _and_ secrets plugins to build a powerful and expressive config management solution, while keeping the concerns of the systems involved neatly separated.
 
 My dream is to be able to write a docker-compose file like this (obviously made-up and not realistic):
+
 ```yaml
 version: "3.8"
 services:
