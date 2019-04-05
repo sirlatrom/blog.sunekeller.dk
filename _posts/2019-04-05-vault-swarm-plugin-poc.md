@@ -1,4 +1,5 @@
 ---
+redirect_from: /2019/03/vault-swarm-plugin-poc/
 title: 'Vault + Swarm Docker secrets plugin (proof of concept)'
 tags: [docker,stack,deploy,swarm,configs,secrets,vault]
 description: In this post, I show how to write and deploy a secrets plugin for Docker Swarm that will fetch its values from HashiCorp Vault.
